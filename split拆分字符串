@@ -1,0 +1,4 @@
+1.单字符拆分
+let arr = str.split(',')
+2.多字符拆分
+let arr = str.split(/[(),]/)
