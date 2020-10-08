@@ -1,0 +1,364 @@
+Canvas介绍
+1.canvas是html5的一个新标签，属于h5的新特性
+2.canvas标签是一个图形的容器，简单点说就是一块画布，你可以在上画矩形，圆形，三角形，折线等等,也可以用来画logo
+3.它是通过javascript来画的，即脚本绘制图形canvas可以用来干啥呢？
+1.制作web网页游戏（但是如果代码写的不咋的游戏可能会非常卡）
+2.数据可视化（这么说你可能不明白，但我告诉你echarts就是基于canvas）
+3.广告banner的动态效果非常适合用canvas制作4.canvas还可以用来内嵌一些网页
+
+canvas基本用法
+
+<body onload="draw()">
+    <canvas id="canvas" width="300" height="300"></canvas>
+</body>
+</html>
+<script>
+    function draw() {
+        // 获取画布
+        var canvas = document.getElementById('canvas');
+        if (canvas.getContext) { // 用于验证浏览器是否支持canvas,它是h5的新特性，老版本ie不支持
+            var ctx = canvas.getContext("2d"); // 可选2d和3d
+            ctx.fillStyle = "rgba(200, 0, 0, 1)"; // 填充色
+            ctx.fillRect (10, 10, 55, 50); // 画矩形的方法，四个参数含义，前两个表示x,y坐标（相对于canvas的位置，并不是相对于窗口），从哪里开始画，后面表示长宽。
+
+            ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+            ctx.fillRect (30, 30, 55, 50);
+
+            // 绘制一个矩形,清除特定矩形，绘制边框
+            ctx.fillRect(100, 100, 100, 100);
+            ctx.clearRect(112.5, 112.5, 75, 75); // 清除矩形
+            ctx.strokeRect(125, 125, 50, 50); // 矩形边框
+        }
+    }
+</script>
+
+canvas进阶用法
+画三角形示例代码：
+
+function draw() {
+        // 获取画布
+        var canvas = document.getElementById('canvas');
+        // 路径画填充三角形
+        if (canvas.getContext) {
+            var ctx = canvas.getContext("2d");
+            ctx.beginPath(); // 新建一个路径，绘制指定到这个路径上
+            ctx.moveTo(75, 50);  // 路径从哪开始
+            ctx.lineTo(100, 75); // 到哪个点
+            ctx.lineTo(100, 25);  
+            ctx.fill();  // 填充内容区域，生成实心图
+			// 画描边三角形
+			ctx.beginPath();
+            ctx.moveTo(150, 150);
+            ctx.lineTo(150, 60);
+            ctx.lineTo(60, 150);
+            ctx.closePath(); // 路径闭合方法
+            ctx.stroke();
+        }
+    }
+    
+三.画笑脸示例代码：
+
+function draw() {
+        // 获取画布
+        var canvas = document.getElementById('canvas');
+        if (canvas.getContext) {
+            var ctx = canvas.getContext("2d");
+            ctx.beginPath();
+            ctx.arc(75, 75, 50, 0, Math.PI * 2, true); // 前两个圆心，后面半径，0代表从多少度开始画，Math.PI*2表示完整的弧长，true代表逆时针
+            ctx.moveTo(110, 75); // 移动到哪，从哪里开始画
+            ctx.arc(75, 75, 35, 0,Math.PI, false); // 顺时针画半圆（口）
+            ctx.moveTo(65, 65);
+            ctx.arc(60, 65, 5, 0, Math.PI * 2, true);  // 左眼小圆
+            ctx.moveTo(95, 65);
+            ctx.arc(90, 65, 5, 0, Math.PI * 2, true); // 右眼小圆
+            ctx.stroke();
+        }
+    }
+    
+    二次贝塞尔曲线画消息框和三次贝塞尔曲线画爱心
+
+function draw() {
+        // 获取画布
+        var canvas = document.getElementById('canvas');
+        if (canvas.getContext) {
+            var ctx = canvas.getContext("2d");
+            ctx.beginPath();
+            ctx.moveTo(75, 25);
+            ctx.quadraticCurveTo(25, 25, 25, 62.5);
+            ctx.quadraticCurveTo(25, 100, 50, 100);
+            ctx.quadraticCurveTo(50, 120, 30, 125);
+            ctx.quadraticCurveTo(60, 120, 65, 100);
+            ctx.quadraticCurveTo(125, 100, 125, 62.5);
+            ctx.quadraticCurveTo(125, 25, 75, 25);
+            ctx.stroke();
+        }
+    }
+    
+画爱心代码：
+
+function draw() {
+        // 获取画布
+        var canvas = document.getElementById('canvas');
+        if (canvas.getContext) {
+            var ctx = canvas.getContext("2d");
+            ctx.beginPath();
+            ctx.moveTo(75, 40);
+            ctx.bezierCurveTo(75, 37, 70, 25, 50, 25);
+            ctx.bezierCurveTo(20, 25, 20, 62.5, 20, 62.5);
+            ctx.bezierCurveTo(20, 80, 40, 102, 75, 120);
+            ctx.bezierCurveTo(110, 102, 130, 80, 130, 62.5);
+            ctx.bezierCurveTo(130, 62.5, 130, 25, 100, 25);
+            ctx.bezierCurveTo(85, 25, 75, 37, 75, 40);
+            ctx.fill();
+        }
+    }
+    
+    动态样式颜色代码：
+
+function draw() {
+        // 获取画布
+        var ctx = document.getElementById('canvas').getContext("2d");
+        for (var i = 0; i < 6; i++) {
+            for (var j = 0; j < 6; j++) {
+                ctx.fillStyle = 'rgb(' + Math.floor(255-42.5*i) + ',' + 
+                   Math.floor(255-42.5*j) + ', 0)';
+                   ctx.fillRect(j * 25, i * 25, 25, 25);
+            }
+        }
+        // for (var i=0;i<6;i++){
+        //     for (var j=0;j<6;j++){
+        //         ctx.strokeStyle = 'rgb(0,' + Math.floor(255-42.5*i) + ',' + 
+        //                         Math.floor(255-42.5*j) + ')';
+        //         ctx.beginPath();
+        //         ctx.arc(12.5+j*25,12.5+i*25,10,0,Math.PI*2,true);
+        //         ctx.stroke();
+        //     }
+        // }
+        // 画背景
+        // ctx.fillStyle = '#FD0';
+        // ctx.fillRect(0,0,75,75);
+        // ctx.fillStyle = '#6C0';
+        // ctx.fillRect(75,0,75,75);
+        // ctx.fillStyle = '#09F';
+        // ctx.fillRect(0,75,75,75);
+        // ctx.fillStyle = '#F30';
+        // ctx.fillRect(75,75,75,75);
+        // ctx.fillStyle = '#FFF'; // 这里是圆的填充色![在这里插入图片描述](https://img-blog.csdnimg.cn/20200923164433952.png#pic_center)
+
+
+        // 设置透明度值
+        // ctx.globalAlpha = 0.2;
+
+        // 画半透明圆
+        // for (var i=0;i<7;i++){
+            // ctx.beginPath();
+            // ctx.arc(75,75,10+10*i,0,Math.PI*2,true);
+            // ctx.fill();
+        // }
+    }
+    
+    制作自己喜欢的个性文字logo代码：
+
+function draw() {
+        // 获取画布
+        var ctx = document.getElementById('canvas').getContext("2d");
+        ctx.shadowOffsetX = 4;
+        ctx.shadowOffsetY = 4;
+        ctx.shadowBlur = 4;
+        ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+        
+        ctx.font = "30px Times New Roman";
+        ctx.fillStyle = "black";
+        ctx.fillText("西伯利亚狼", 5, 30);
+
+		// ctx.font = "48px serif";
+        // ctx.textBaseline = "hanging";
+        // ctx.strokeText("西伯利亚狼", 10, 100);
+		
+		// 折线图雏形
+        // ctx.beginPath();
+        // ctx.moveTo(20, 200);
+        // ctx.lineTo(60, 160);
+        // ctx.lineTo(100, 160);
+        // ctx.lineTo(160, 100);
+        // ctx.stroke();
+
+    }
+    
+    高级动画
+太阳系动画代码如下（示例）：
+
+var sun = new Image();
+    var moon = new Image();
+    var earth = new Image();
+    function init(){
+    sun.src = 'https://mdn.mozillademos.org/files/1456/Canvas_sun.png';
+    moon.src = 'https://mdn.mozillademos.org/files/1443/Canvas_moon.png';
+    earth.src = 'https://mdn.mozillademos.org/files/1429/Canvas_earth.png';
+    window.requestAnimationFrame(draw);
+    }
+
+    function draw() {
+    var ctx = document.getElementById('canvas').getContext('2d');
+
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.clearRect(0,0,300,300); // clear canvas
+
+    ctx.fillStyle = 'rgba(0,0,0,0.4)';
+    ctx.strokeStyle = 'rgba(0,153,255,0.4)';
+    ctx.save();
+    ctx.translate(150,150);
+
+    // Earth
+    var time = new Date();
+    ctx.rotate( ((2*Math.PI)/60)*time.getSeconds() + ((2*Math.PI)/60000)*time.getMilliseconds() );
+    ctx.translate(105,0);
+    ctx.fillRect(0,-12,50,24); // Shadow
+    ctx.drawImage(earth,-12,-12);
+
+    // Moon
+    ctx.save();
+    ctx.rotate( ((2*Math.PI)/6)*time.getSeconds() + ((2*Math.PI)/6000)*time.getMilliseconds() );
+    ctx.translate(0,28.5);
+    ctx.drawImage(moon,-3.5,-3.5);
+    ctx.restore();
+
+    ctx.restore();
+    
+    ctx.beginPath();
+    ctx.arc(150,150,105,0,Math.PI*2,false); // Earth orbit
+    ctx.stroke();
+    
+    ctx.drawImage(sun,0,0,300,300);
+
+    window.requestAnimationFrame(draw);
+    }
+
+    init();
+    
+    炫酷鼠标跟随动画代码如下：
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <script>
+            var cn;
+            //= document.getElementById('cw');
+            var c;
+            var u = 10;
+            const m = {
+                x: innerWidth / 2,
+                y: innerHeight / 2
+            };
+            window.onmousemove = function(e) {
+                m.x = e.clientX;
+                m.y = e.clientY;
+
+            }
+            function gc() {
+                var s = "0123456789ABCDEF";
+                var c = "#";
+                for (var i = 0; i < 6; i++) {
+                    c += s[Math.ceil(Math.random() * 15)]
+                }
+                return c
+            }
+            var a = [];
+            window.onload = function myfunction() {
+                cn = document.getElementById('cw');
+                c = cn.getContext('2d');
+
+                for (var i = 0; i < 10; i++) {
+                    var r = 30;
+                    var x = Math.random() * (innerWidth - 2 * r) + r;
+                    var y = Math.random() * (innerHeight - 2 * r) + r;
+                    var t = new ob(innerWidth / 2,innerHeight / 2,5,"red",Math.random() * 200 + 20,2);
+                    a.push(t);
+                }
+                //cn.style.backgroundColor = "#700bc8";
+
+                c.lineWidth = "2";
+                c.globalAlpha = 0.5;
+                resize();
+                anim()
+            }
+            window.onresize = function() {
+
+                resize();
+
+            }
+            function resize() {
+                cn.height = innerHeight;
+                cn.width = innerWidth;
+                for (var i = 0; i < 101; i++) {
+                    var r = 30;
+                    var x = Math.random() * (innerWidth - 2 * r) + r;
+                    var y = Math.random() * (innerHeight - 2 * r) + r;
+                    a[i] = new ob(innerWidth / 2,innerHeight / 2,4,gc(),Math.random() * 200 + 20,0.02);
+
+                }
+                //  a[0] = new ob(innerWidth / 2, innerHeight / 2, 40, "red", 0.05, 0.05);
+                //a[0].dr();
+            }
+            function ob(x, y, r, cc, o, s) {
+                this.x = x;
+                this.y = y;
+                this.r = r;
+                this.cc = cc;
+                this.theta = Math.random() * Math.PI * 2;
+                this.s = s;
+                this.o = o;
+                this.t = Math.random() * 150;
+
+                this.o = o;
+                this.dr = function() {
+                    const ls = {
+                        x: this.x,
+                        y: this.y
+                    };
+                    this.theta += this.s;
+                    this.x = m.x + Math.cos(this.theta) * this.t;
+                    this.y = m.y + Math.sin(this.theta) * this.t;
+                    c.beginPath();
+                    c.lineWidth = this.r;
+                    c.strokeStyle = this.cc;
+                    c.moveTo(ls.x, ls.y);
+                    c.lineTo(this.x, this.y);
+                    c.stroke();
+                    c.closePath();
+
+                }
+            }
+            function anim() {
+                requestAnimationFrame(anim);
+                c.fillStyle = "rgba(0,0,0,0.05)";
+                c.fillRect(0, 0, cn.width, cn.height);
+                a.forEach(function(e, i) {
+                    e.dr();
+                });
+
+            }
+        </script>
+        <style>
+            #cw {
+                position: fixed;
+                z-index: -1;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: rgba(0,0,0,0.05);
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="cw"></canvas>
+        qwerewr    
+
+    </body>
+</html>
