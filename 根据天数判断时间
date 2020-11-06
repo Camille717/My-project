@@ -1,0 +1,101 @@
+<van-field
+        class="wid"
+        readonly
+        clickable
+        right-icon="arrow-down"
+        :value="seatVal"
+        label="保险期限"
+        placeholder="点击选择保险期限"
+        @click="showPicker = true"
+        :rules="[{required: true, message: '点击选择保险期限'}]"
+      />
+      <van-popup v-model="showPicker" round position="bottom">
+        <van-picker show-toolbar :columns="columns" @cancel="showPicker = false" @confirm="seatConfirm" />
+      </van-popup>
+      
+      <div class="deadline">
+            <div>
+              <van-field
+                readonly
+                :value="startDate"
+                right-icon="arrow-down"
+                name="startDate"
+                label="保险期限:"
+                placeholder="请选择起保日期"
+                @click="startPicker = true"
+                :rules="[{required: true, message: '请选择起保日期'}]"
+              />
+              <van-popup v-model="startPicker" position="bottom">
+                <van-datetime-picker
+                  type="date"
+                  title="选择年月日"
+                  :min-date="startMin"
+                  :max-date="startMax"
+                  @confirm="startConfirm"
+                  @cancel="startPicker = false"
+                />
+              </van-popup>
+            </div>
+
+            <van-field readonly v-model="endDate" :value="seatVal" name="endDate" label="至:" />
+          </div>
+         
+    data(){
+    return{
+     startDate: `${this.setDate(this.startmin())}       00:00:00`,
+    }
+    }
+    
+    computed: {
+    endDate: function() {
+      // 先拿到保险起期
+      let myDate = this.startDate.split(' ')[0]
+
+      // 获取月份
+      let myMonth = parseInt(myDate.split('-')[1])
+
+      // 先判断选择的保险期限是多少天还是全年
+      // this.val代表传客户选择的保险期限
+      console.log('1111', this.$route.query.val)
+      if (this.$route.query.val == '全年') {
+        // 如果是全年,年份加一即可
+        let myYear1 = parseInt(myDate.split('-')[0]) + 1
+        // 获取天数,天数不变即可
+        let myday1 = parseInt(myDate.split('-')[2]) - 1
+        // 这里需要判断天数是不是为0
+        if (myday1 == 0) {
+          let m1 = myMonth - 1
+          let d1 = new Date(myYear1, m1, 0).getDate()
+          if (m1 == 0) {
+            let y3 = myYear1 - 1
+            let m3 = 12
+            let d3 = new Date(myYear1, m3, 0).getDate()
+            return `${y3}-${m3 <= 9 ? `0${m3}` : `${m3}`}-${d1 <= 9 ? `0${d1}` : `${d1}`}       24:00:00`
+          }
+          return `${myYear1}-${m1 <= 9 ? `0${m1}` : `${m1}`}-${d1 <= 9 ? `0${d1}` : `${d1}`}       24:00:00`
+        }
+        return `${myYear1}-${myMonth <= 9 ? `0${myMonth}` : `${myMonth}`}-${
+          myday1 <= 9 ? `0${myday1}` : `${myday1}`
+        }       24:00:00`
+      } else {
+        // 不是则不用管  直接拿到年份即可
+        let myYear2 = parseInt(myDate.split('-')[0])
+        // 获取天数,加上选择的天数
+        let myday2 = parseInt(myDate.split('-')[2]) - 1 + parseInt(this.$route.query.val.split('天')[0])
+        let d4 = new Date(myYear2, myMonth, 0).getDate() //获取当月日期
+        if (myday2 > d4) {
+          let d5 = myday2 - d4
+          let m4 = myMonth + 1
+          if (m4 > 12) {
+            let y4 = myYear2 + 1
+            let m5 = m4 - 12
+            return `${y4}-${m5 <= 9 ? `0${m5}` : `${m5}`}-${d5 <= 9 ? `0${d5}` : `${d5}`}       24:00:00`
+          }
+          return `${myYear2}-${m4 <= 9 ? `0${m4}` : `${m4}`}-${d5 <= 9 ? `0${d5}` : `${d5}`}       24:00:00`
+        }
+        return `${myYear2}-${myMonth <= 9 ? `0${myMonth}` : `${myMonth}`}-${
+          myday2 <= 9 ? `0${myday2}` : `${myday2}`
+        }       24:00:00`
+      }
+    }
+  },
