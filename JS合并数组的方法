@@ -1,0 +1,33 @@
+ concat方法
+ var a = [1,2,3];
+ var b = [4,5,6];
+ var c = a.concat(b);//c=[1,2,3,4,5,6];
+ 
+ let arr1 = [1, 2, 3];
+ let arr2 = ['a', 'b'];
+ arr1.push(arr2);
+ console.log(arr1);//[1, 2, 3, Array(2)]
+ 
+  let arr1 = [1, 2, 3];
+  let arr2 = ['a', 'b'];
+  let arr3 = arr1.concat(arr2);
+  console.log(arr1);//[1, 2, 3]
+  console.log(arr3);//[1, 2, 3, "a", "b"]
+ 
+ for循环
+ for(var i in b){
+  a.push(b[i]);
+}
+
+apply()方法
+a.push.apply(a,b);
+a.push(4,5,6);
+
+let numbers=[5,6,2,3,1];
+let max=Math.max.apply(null,numbers);//6
+let min=Math.min.apply(null,numbers);//1 Math.max/Math.min来找出一个数组中的最大/最小值
+
+扩展运算符
+var a = [1,2,3];
+var b = [4,5,6];
+var newA = [...a,...b]
