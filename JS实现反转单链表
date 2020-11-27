@@ -1,0 +1,28 @@
+思路：
+
+1.递归的基线条件：遍历到末节点（node.next === null）
+2.递归的递归条件：node.next !== null
+3.当遇到末节点时，返回末节点，前一节点接收末节点，并把末节点的next设置为自身，返回前一节的，继续下去
+4.考虑特殊情况：undefined和null
+
+var reverseList = function (head) {
+    // 闭包
+    if (head === undefined || head === null) return null
+    var originalHead = head
+    var reverseHead
+    var reverse = function (head) {
+        if (head.next === null) {
+            reverseHead = head
+            return head
+        } else {
+            var node = reverse(head.next)
+            node.next = head
+            if (originalHead === head) {
+                head.next = null
+                return reverseHead
+            } else {
+                return head
+            }
+        }
+    }
+    return reverse(head)};
