@@ -1,0 +1,457 @@
+tab切换页面
+<template>
+  <section class="d-flex">
+    <div
+      style="
+        width: 16px;
+        height: 80px;
+        position: absolute;
+        bottom: 50%;
+        z-index: 1;
+        margin-bottom: 56px;
+        margin-left: 90px;
+      "
+    >
+      <img src="~@/assets/images/test/jiantou.png" />
+    </div>
+    <div class="d-flex justify-content-center align-items-center left-m">
+      <ul>
+        <li
+          v-for="item in menuList"
+          :class="{ active: item.id == menuActive }"
+          :key="item.id"
+          @click.stop="changeMenu(item.id)"
+        >
+          {{ item.text }}
+        </li>
+      </ul>
+      <div class="d-flex justify-content-center title-name"></div>
+    </div>
+    <div class="right-c">
+      <proent v-if="menuActive == 1" @handleTab="activateTab" :class="{active:index==1}" />
+      <szong v-if="menuActive == 2" @handleTab="activateTab" @openLoan="openLoan" :class="{active:index==2}" />
+      <houpro v-if="menuActive == 3" @handleTab="activateTab" :class="{active:index==3}" />
+    </div>
+  </section>
+</template>
+<script>
+import InterNet from "../VideoPlayer/InterNet";
+import Houpro from "../VideoPlayer/Houpro";
+import Proent from "../VideoPlayer/proent";
+import Szong from "../VideoPlayer/Szong";
+export default {
+  name: "VideoPlayer",
+  components: {
+    InterNet,
+    Proent,
+    Szong,
+    Houpro,
+  },
+  data() {
+    return {
+      menuActive: 1,
+      index:1,
+      menuList: [
+        {
+          id: 1,
+          text: "事前",
+        },
+        {
+          id: 2,
+          text: "事中",
+        },
+        {
+          id: 3,
+          text: "事后",
+        },
+      ],
+    };
+  },
+  mounted() {
+  },
+  methods: {
+    //切换菜单
+    changeMenu(id) {
+      this.menuActive = id;
+    },
+    activateTab(index){
+      this.index = index;
+      this.menuActive = index;
+    },
+    openLoan(){
+      this.$emit('openLoan')
+    }
+
+  },
+};
+</script>
+<style lang="scss" scoped>
+.d-flex {
+  z-index: 99;
+}
+.left-m {
+  z-index: 99;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  flex: 0 0 194px;
+  ul {
+    li {
+      display: block;
+      width: 98px;
+      line-height: 100px;
+      text-align: center;
+      background: url("~@/assets/images/test/shiqian.png") center no-repeat;
+      background-size: cover;
+      font-size: 18px;
+      font-weight: 700;
+      margin: 95px 0;
+      cursor: pointer;
+      transition: all 0.35s;
+      z-index: 99;
+      &:hover,
+      &.active {
+        background: url("~@/assets/images/test/shihou.png") center no-repeat;
+        background-size: cover;
+        color: rgba(181, 93, 10, 1);
+      }
+    }
+  }
+  .title-name {
+    width: 16px;
+    height: 80px;
+    background: url("~@/assets/images/test/jiantou.png") center;
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    margin-top: 59px;
+  }
+}
+.right-c {
+  flex: 1;
+  min-height: 600px;
+  padding-top: 15px;
+  padding-left: 25px;
+}
+</style>
+
+<template>
+  <section class="main-box">
+    <div class="flex-box">网络贷款诈骗仿真</div>
+    <div class="operator-item">
+      <div class="item-title mt16 mr16">
+        <img src="~@/assets/images/test/1.png" style="width: 100%" />
+      </div>
+      <div class="d-flex justify-content-end pr24 pt8 pb8">
+        <el-button type="primary" class="pl32 pr32" @click="nextstep()">下一步</el-button>
+      </div>
+    </div>
+  </section>
+</template>
+<script>
+import InterTab from "./InterTab";
+export default {
+  name: "proent",
+  components: {
+    InterTab,
+  },
+  data() {
+    return {
+      // index:1
+    };
+  },
+  mounted() {},
+  methods: {
+     nextstep(){
+          // this.index = index;
+          this.$emit('handleTab', 2);
+          // this.$router.push({path:'/?menuActive=2'});
+        }
+  },
+};
+</script>
+<style lang="scss" scoped>
+.flex-box {
+  width: 192px;
+  height: 33px;
+  background: linear-gradient(180deg, #e4c498, #cf923e 98%);
+  font-size: 18px;
+  font-family: PingFangSC, PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  color: #ffffff;
+  line-height: 33px;
+  margin: 0 auto;
+}
+.operator-item{
+  min-height: 675px;
+}
+</style>
+
+
+tab中图片切换页面
+<template>
+  <section class="main-box">
+    <div class="flex-box">网络贷款诈骗仿真</div>
+    <div class="operator-item">
+      <div class="item-title mt16 mr16" v-if="startBtn">
+        <img src="~@/assets/images/test/3.png" style="width: 100%" />
+      </div>
+      <div class="item-title mt16 mr16" v-if="suspendBtn">
+        <img src="~@/assets/images/test/4.png" style="width: 100%" />
+      </div>
+      <div class="page mt16 mr16" v-if="suspendBtnpo">
+        <img src="~@/assets/images/test/5.png" style="width: 100%" />
+        <div class="image-move-wapper">
+          <div class="image-show-box" ref="imageShowBox">
+            <div
+              class="drag-container"
+              ref="dragContainer"
+              :style="
+                'left:' +
+                dragContainer.newPoint.left +
+                'px; top:' +
+                dragContainer.newPoint.top +
+                'px'
+              "
+              @mousedown="DragContainerMouseDown"
+            >
+              <div class="drag-image-box">
+                <img src="~@/assets/images/test/1_1.png" draggable="false" />
+                <a class="proend">
+                  <div class="pointer" @click="goToParentLoan"></div>
+                  <img src="~@/assets/images/test/6.png" draggable="false"
+                /></a>
+                <img src="~@/assets/images/test/1_2.png" draggable="false" />
+                <img src="~@/assets/images/test/1_3.png" draggable="false" />
+                <img src="~@/assets/images/test/1_4.png" draggable="false" />
+                <img src="~@/assets/images/test/1_5.png" draggable="false" />
+                <img src="~@/assets/images/test/1_6.png" draggable="false" />
+                <img src="~@/assets/images/test/1_7.png" draggable="false" />
+                <div
+                  class="point"
+                  style="left: 10%; top: 10%"
+                  @mousedown="PointMouseDown"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end pr24 pt8 pb8">
+        <el-button type="primary" class="pl32 pr32" @click="nextstep()">下一步</el-button>
+      </div>
+    </div>
+  </section>
+</template>
+<script>
+import InterTab from "./InterTab";
+export default {
+  name: "Szong",
+  components: {
+    InterTab,
+  },
+  data() {
+    return {
+      startBtn: true,
+      suspendBtn: false,
+      suspendBtnpo: false,
+      dragContainer: {
+        box: {
+          w: 100,
+          h: 0,
+        },
+        point: {
+          left: 0,
+          top: 0,
+        },
+        newPoint: {
+          left: 0,
+          top: 0,
+        },
+      },
+      mousePoint: {
+        x: 0,
+        y: 0,
+      },
+      imageShowBox: {
+        box: {
+          w: 0,
+          h: 0,
+        },
+        dragcheck: {
+          h: true,
+          v: true,
+        },
+      },
+    };
+  },
+  updated() {
+    // 确保DOM元素已经渲染成功，然后获取拖拽容器和显示区域的大小
+    if (this.$refs.dragContainer) {
+      this.$nextTick(() => {
+        console.log("this:", this);
+        console.log("this.$refs:", this.$refs.dragContainer);
+        this.dragContainer.box = {
+          w: this.$refs.dragContainer.offsetWidth,
+          h: this.$refs.dragContainer.offsetHeight,
+        };
+        this.imageShowBox.box = {
+          w: this.$refs.imageShowBox.offsetWidth,
+          h: this.$refs.imageShowBox.offsetHeight,
+        };
+        // 判断是否允许拖拽
+        this.imageShowBox.dragcheck = {
+          h: this.imageShowBox.box.w > this.dragContainer.box.w ? false : true,
+          v: this.imageShowBox.box.h > this.dragContainer.box.h ? false : true,
+        };
+      });
+    }
+  },
+  mounted() {},
+  methods: {
+    nextstep() {
+      if (this.startBtn) {
+        this.suspendBtn = true;
+        this.startBtn = false;
+        this.suspendBtnpo = false;
+      } else if (this.suspendBtn) {
+        this.startBtn = false;
+        this.suspendBtn = false;
+        this.suspendBtnpo = true;
+      } else if (this.suspendBtnpo) {
+        this.startBtn = false;
+        this.suspendBtn = false;
+        this.suspendBtnpo = false;
+        this.$emit("handleTab", 3);
+      }
+    },
+    // 鼠标在拖拽容器中按下时触发
+    DragContainerMouseDown(e) {
+      const _this = this;
+      // 记录鼠标点击时的初始坐标
+      this.mousePoint = {
+        x: e.clientX,
+        y: e.clientY,
+      };
+      _this.dragContainer.point = _this.dragContainer.newPoint;
+      document.body.onmousemove = _this.DragContainerMouseMove;
+      document.onmouseup = _this.DragContainerMouseUp;
+      return false;
+    },
+    // 容器拖拽时触发
+    DragContainerMouseMove(e) {
+      const _this = this;
+      // 鼠标偏移量 = 初始坐标 - 当前坐标
+      let dx = e.clientX - _this.mousePoint.x;
+      let dy = e.clientY - _this.mousePoint.y;
+      // 获取拖拽容器移动后的left和top值
+      if (_this.imageShowBox.dragcheck.h)
+        var newx =
+          dx > 0
+            ? Math.min(0, _this.dragContainer.point.left + dx)
+            : Math.max(
+                -_this.dragContainer.box.w + _this.imageShowBox.box.w,
+                _this.dragContainer.point.left + dx
+              );
+      if (_this.imageShowBox.dragcheck.v)
+        var newy =
+          dy > 0
+            ? Math.min(0, _this.dragContainer.point.top + dy)
+            : Math.max(
+                -_this.dragContainer.box.h + _this.imageShowBox.box.h,
+                _this.dragContainer.point.top + dy
+              );
+      _this.dragContainer.newPoint = {
+        left:
+          typeof newx != "undefined" ? newx : _this.dragContainer.point.left,
+        top: typeof newy != "undefined" ? newy : _this.dragContainer.point.top,
+      };
+      console.log(_this.dragContainer.newPoint);
+      return false;
+    },
+    // 移动完成 取消onmousemove和onmouseup事件
+    DragContainerMouseUp(e) {
+      document.body.onmousemove = null;
+      document.onmouseup = null;
+    },
+    PointMouseDown(e) {
+      //阻止事件冒泡
+      e.stopPropagation();
+    },
+    goToParentLoan(){
+      this.$emit('openLoan')
+    }
+  },
+};
+</script>
+<style lang="scss" scoped>
+.flex-box {
+  width: 192px;
+  height: 33px;
+  background: linear-gradient(180deg, #e4c498, #cf923e 98%);
+  font-size: 18px;
+  font-family: PingFangSC, PingFangSC-Semibold;
+  font-weight: 600;
+  text-align: center;
+  color: #ffffff;
+  line-height: 33px;
+  margin: 0 auto;
+}
+.operator-item{
+  min-height: 675px;
+}
+.page {
+  position: relative;
+  //  background: url('~@/assets/images/test/5.png') no-repeat center;
+  //   width: 100%;
+  //   height: 100%;
+  //   position: absolute;
+  .image-move-wapper {
+    position: absolute;
+    top: 90px;
+    background: #fff;
+    box-shadow: rgba(255, 255, 255, 0.5);
+    padding: 10px;
+    left: 36px;
+  }
+  .image-show-box {
+    height: 335px;
+    width: 600px;
+    cursor: move;
+    overflow: auto;
+    position: relative;
+    .drag-container {
+      position: absolute;
+      left: 0px;
+      top: 0;
+      /*禁止元素选中*/
+      -moz-user-select: none; /*火狐*/
+      -webkit-user-select: none; /*webkit浏览器*/
+      -ms-user-select: none; /*IE10*/
+      -khtml-user-select: none; /*早期浏览器*/
+      user-select: none;
+      // .drag-image-box {
+      //   position: relative;
+      //   .point {
+      //   }
+      // }
+      .drag-image-box {
+        img {
+          width: 100%;
+        }
+      }
+      .proend {
+        position: relative;
+        > div {
+          position: absolute;
+          width: 340px;
+          height: 50px;
+          /* background: #ccc; */
+          bottom: -14px;
+        }
+      }
+    }
+  }
+}
+</style>
+
+
